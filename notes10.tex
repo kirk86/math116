@@ -1,0 +1,240 @@
+% Figures within a column...
+\makeatletter
+\newenvironment{tablehere}
+{\def\@captype{table}}
+{}
+\newenvironment{figurehere}
+{\def\@captype{figure}}
+{}
+\makeatother
+
+\documentclass{artikel3}
+\usepackage{amssymb,amsmath,amsthm,graphicx,enumerate,textcomp,color,datetime,mathtools}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{pgfplots}
+\yyyymmdddate
+\date{\formatdate{2012}{04}{23}}
+\pgfplotsset{compat=1.3}
+\setlength{\headheight}{15pt}
+\lhead{MATH 116: Lecture Notes 10, {\thepage} of \pageref{lastpage}}
+\chead{}
+\rhead{\today}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\newcommand{\pr}[1]{\left(#1\right)}
+\newcommand{\abs}[1]{\left|#1\right|}
+\renewcommand{\vec}[1]{\underline{#1}}
+\newcommand{\alt}[1]{\tilde{#1}}
+\newcommand{\dotp}[2]{#1\cdot #2}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\complex}{\mathbb{R}}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\eqlabel}[1]{\tag{\theequation}\label{#1}\refstepcounter{equation}}
+\newcommand{\mseq}[2]{#1_1,\ldots,#1_{#2}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\mvd}{\twoheadrightarrow}
+\newcommand{\unit}[1]{\;\rm{#1}}
+\newcommand{\del}{\partial}
+\newcommand{\indentblock}[1]{\addtolength{\leftskip}{5mm}
+#1
+}
+\newcommand{\interior}[1]{\breve{#1}}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newcommand{\lemref}[1]{Lemma \ref{#1}}
+\newcommand{\TODO}[1]{}
+\DeclareMathOperator{\diam}{diam\;}
+\numberwithin{equation}{enumi}
+\newcommand{\eqcite}[1]{\text{[#1]}}
+\newcommand{\eqnref}[1]{Stmt. \ref{#1}}
+\newcommand{\expval}[1]{\left\langle #1\right\rangle}
+\newcommand{\closure}[1]{\overline{#1}}
+\begin{document}
+11f. Consider \[
+	f(z)=\sum_{k=0}^{\infty} \frac{k}{k^2+4}z^k.
+\] For $z=1$, this sum diverges; for $z=-1$, this sum converges.
+For $z=e^{i\theta}$, $\theta\neq 0,\pi$, do as much as you can.
+
+14. Circle?
+
+54. Very involved.
+
+Continued from previous lecture?:
+
+Consider $f:U\to\complex$ with $U$ connected, $a\in U$.
+\begin{lem}
+	Suppose $f(a)=0$ and $f^{(n)}(a)\neq 0$ for some $n$.  Then there
+	is some $r>0$ such that $D(a,r)\subset U$ and $f(z)$ has no
+	zeros in $D(a,r)\setminus \{a\}$.
+\end{lem}
+
+Define $D(a,r)^*=D(a,r)\setminus\{a\}$.
+
+\begin{proof}
+	Take $f$ holomorphic over $\overline{D(a,R)}\subset U$.
+	Expanding at $a$, \[
+		f(z)=f(a)+\cdots+\frac{f^{(k)}(a)}{k!}(z-a)^k+\cdots
+	\] where $f^{(k)}(a)$ is the first nonzero derivative of $f$
+	at $a$; this exists because there is at least one nonzero
+	derivative, as assumed.
+	
+	Then \[
+		g(z)=\sum_{\ell=k}^{\infty}\frac{f^{(\ell)}(a)}{\ell!}(z-a)^{\ell-k},
+	\] and \[
+		f(z)=(z-a)^kg(z).
+	\] Note that $g(a)=\frac{f^{(k)}(a)}{k!}\neq 0$.
+	
+	Since $g(z)$ converges in a small disk $D(a,r)$ and is holomorphic,
+	and since $g(a)\neq 0$, then there exists some small $r\leq R$
+	such that $g(z)$ has no zeros in $D(a,r)^*$.
+\end{proof}
+
+\begin{cor}
+	If $f^{(n)}(a)=0$ for all $n\geq 0$, then $f(z)=0$ in some small
+	disk $D(a,r)$.
+\end{cor}
+
+Now, this raises the question: can a holomorphic
+function $f$ be zero over some small disk, but nevertheless
+be nonzero somewhere else over the same connected
+region $U$? Answer: No!
+
+Take \[
+	\Sigma_n=\{p\in U:f^{(n)}(p)=0\}.
+\] Note that this is closed, because each $f^{(n)}$ is
+continuous.
+
+Then \[
+	\Sigma_\infty=\bigcap_{n=0}^\infty \Sigma_n
+\] is also closed.
+
+Then, $p\in \Sigma_\infty$ implies
+that $f^{(n)}(p)=0\forall n$, which
+implies $f(z)=0$ near $p$.  Thus $\Sigma_\infty$ is closed.
+
+\begin{lem}
+	$\Sigma_\infty\subset U$ is open.
+\end{lem}
+\begin{proof}
+	Let $p\in \Sigma_\infty\subset U$.  To show $\Sigma_\infty$ is open at $p$,
+	we need only to find some $\epsilon>0$ such that $D(p,\epsilon)\subset \Sigma_\infty$.
+	
+	Since $p\in \Sigma_\infty$, $f^{(n)}(p)=0\forall n$.  Thus the power
+	series expansion of $f$ at $p$ is identically zero, and thus for some small $\epsilon$,
+	$f(z)=0\forall z\in D(p,\epsilon)$, and thus $D(p,\epsilon)\subset \Sigma_\infty$.
+\end{proof}
+
+The final result follows from noting that $\Sigma_\infty$ can only be both
+open and closed in $U$ iff it is empty or equal to $U$.
+
+\begin{thm}
+	Let $U\subset\complex$ be connected, and let $f:U\to\complex$ be holomorphic.
+	Suppose $\{p_n\}\to p$ in $U$ such that $p_n\neq p\forall n$,
+	and suppose $f(p_n)=0\forall n$.  Then $f=0$ on all of $U$.
+\end{thm}
+\begin{proof}
+	We want to show that all the derivatives of $f$ at $p$ are zero.
+	But $f$ is continuous, so $f(p)=0$.  We claim that this means
+	$f^{(n)}(p)=0$ for all $n\geq 1$; otherwise, $p$
+	is the only zero of $f$ in some $D(p,\epsilon)$ with $\epsilon>0$
+	by the previous result; this contradicts $p_n\to p$ with $p_n\neq p$
+	and $f(p_n)=0$ (because some $p_n$ must be in $D(p,\epsilon)^*$).
+	
+	This proves that \[
+		\Sigma_\infty=\{\alpha\in U:f^{(n)}(\alpha)=0\forall n\}
+	\] is nonempty, since it contains $p$.
+	
+	If $\Sigma_\infty$ is both closed and open in some connected domain
+	$U$, and is also nonempty, then $\Sigma_\infty=U$.
+\end{proof}
+
+\begin{cor}
+	Suppose $f,g:U\to\complex$ are both holomorphic, with $U$ connected.
+	Suppose $\gamma\subset U$ is some (piecewise $C^1$?) arc in $U$, and \[
+		f|_\gamma=g|_\gamma.
+	\] Then $f=g$ on $U$.
+\end{cor}
+\begin{proof}
+	By the previous result, $f-g$ has infinitely close zeros (along $\gamma$),
+	so $f-g=0$ on all of $U$.
+\end{proof}
+
+Example: $\sin 2x=2\sin x\cos x$, for $x\in\reals$.  This
+implies $\sin(2z)=2\sin z\cos z$ for all $z\in\complex$,
+since we can take any arc $\gamma\subset \reals\subset \complex$,
+and use the previous corollary.
+
+Expanding on connectedness:
+
+$U$ is connected iff for all $p,q\in U$, there is some arc $\gamma$
+connecting $p$ and $q$.  Take some subset $V\subset U$
+that is both closed and open in $U$, then assume $p\in V$, and
+assume for contradiction $q\notin V$.  Since $\gamma$ is continuous,
+the preimage $\gamma^{-1}(U)$ is both closed and open in $[0,1]$,
+but the only such set is all of $[0,1]$; i.e. $q\in V$,
+which is a contradiction.  Thus, either $V$ contains both
+$p$ and $q$, or neither; thus $V$ is empty or $V=U$.
+
+\begin{thm}
+	Riemann extension theorem (i.e. removable singularity): Suppose
+	$f:D(a,r)^*\to\complex$ is holomorphic.  Suppose $\lim_{z\to a}f(z)=\alpha$
+	exists in $\complex$.  Then $f$ extends to a holomorphic function on $D(a,r)$,
+	i.e. there exists $\alt{f}:D(a,r)\to\complex$ holomorphic such that \[
+		\alt{f}|_{D(a,r)^*}=f.
+	\]
+\end{thm}
+\begin{proof}
+	Note that there is only one possible extension, i.e. \[
+		\alt{f}(z)=\begin{dcases*}
+			\alpha=\lim_{w\to a}f(w)&if $z=a$\\
+			f(z)&otherwise
+		\end{dcases*}
+	\] since $\alt{f}$ must be $C^0$, i.e. continuous.
+	
+	We need to show that $\alt{f}$ is holomorphic.  One way
+	is to show that \[
+		\alt{f}'(a)=\lim_{h\to 0}\frac{\alt{f}(a+h)-\alt{f}(a)}{h}
+	\] exists, but this may be difficult.
+	
+	Instead, use a power series expansion, or rather prove the result
+	for a modified function with similar power series.  In particular,
+	show $g(z)=(z-a)\alt{f}(z)$ is holomorphic on $D(a,r)^*$, which
+	has no difficulty.  Then \[
+		g'(a)=\lim_{h\to 0}\frac{g(a+h)-g(a)}{h}
+		= \lim_{h\to 0}\frac{h\alt{f}(a+h)}{h}=\alt{f}(a)=\alpha,
+	\] so $g$ is holomorphic.
+	
+	Then, either $g(z)=0$ for all $z\in D(a,r)$, in which
+	case $\alt{f}=0$ is holomorphic; or $g$ is not identically zero,
+	and $g(z)=(z-a)^k\alt{g}(z)$, with $\alt{g}(a)\neq 0$, $k\geq 1$
+	(with $\alt{g}$ holomorphic).
+	
+	Then $\alt{f}(z)=\frac{g(z)}{z-a}=(z-a)^{k-1}\alt{g}(z)$ is holomorphic.
+	
+	Another alternative: Morera's theorem: If $f\in C^0(D(a,r))$ and $\oint_\gamma f=0$
+	for all closed arcs $\gamma$, then $f$ is holomorphic on $D(a,r)$.
+	The proof of this uses the existence of an antiderivative
+	$F$ of $\alt{f}$ on a disc (using the taxicab-style path from $a$ to $z$
+	for integration; this is well-defined iff integrals
+	on closed paths are zero),
+	after which direct calculation implies that the Cauchy-Riemann
+	equations are satisfied, and $F$ is holomorphic.  Then,
+	$\alt{f}=F'$ is holomorphic.
+	
+	Left to verify: $\alt{f}$ as defined has zero integral over every
+	closed curve $\gamma$, and in particular every rectangular closed curve.
+	Idea: over the integration path, cut the loop into two (if needed)
+	pieces avoiding the point $a$, and use continuity at $a$ (we know
+	closed curves not surrounding $a$ will have zero integral by holomorphicity
+	of $f$).
+\end{proof}
+\label{lastpage}
+\end{document}

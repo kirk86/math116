@@ -1,0 +1,220 @@
+% Figures within a column...
+\makeatletter
+\newenvironment{tablehere}
+{\def\@captype{table}}
+{}
+\newenvironment{figurehere}
+{\def\@captype{figure}}
+{}
+\makeatother
+
+\documentclass{artikel3}
+\usepackage{amssymb,amsmath,amsthm,graphicx,enumerate,textcomp,color,datetime,mathtools}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{pgfplots}
+\yyyymmdddate
+\date{\formatdate{2012}{04}{20}}
+\pgfplotsset{compat=1.3}
+\setlength{\headheight}{15pt}
+\lhead{MATH 116: Lecture Notes 9, {\thepage} of \pageref{lastpage}}
+\chead{}
+\rhead{\today}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\newcommand{\pr}[1]{\left(#1\right)}
+\newcommand{\abs}[1]{\left|#1\right|}
+\renewcommand{\vec}[1]{\underline{#1}}
+\newcommand{\alt}[1]{\tilde{#1}}
+\newcommand{\dotp}[2]{#1\cdot #2}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\complex}{\mathbb{R}}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\eqlabel}[1]{\tag{\theequation}\label{#1}\refstepcounter{equation}}
+\newcommand{\mseq}[2]{#1_1,\ldots,#1_{#2}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\mvd}{\twoheadrightarrow}
+\newcommand{\unit}[1]{\;\rm{#1}}
+\newcommand{\del}{\partial}
+\newcommand{\indentblock}[1]{\addtolength{\leftskip}{5mm}
+#1
+}
+\newcommand{\interior}[1]{\breve{#1}}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newcommand{\lemref}[1]{Lemma \ref{#1}}
+\newcommand{\TODO}[1]{}
+\DeclareMathOperator{\diam}{diam\;}
+\numberwithin{equation}{enumi}
+\newcommand{\eqcite}[1]{\text{[#1]}}
+\newcommand{\eqnref}[1]{Stmt. \ref{#1}}
+\newcommand{\expval}[1]{\left\langle #1\right\rangle}
+\newcommand{\closure}[1]{\overline{#1}}
+\begin{document}
+\section{Summary}
+Properties of holomorphic functions:
+\begin{itemize}
+	\item
+		Invariance of line integrals: for $f:U\to\complex$ holomorphic,
+		with $\gamma_1~\gamma_2$ in $U$ closed (i.e. $\gamma_1$ can be deformed
+		continuously to $\gamma_2$ in $U$; also called homotopy equivalence) then
+		$\oint_{\gamma_1}f(z)dz=\oint_{\gamma_2}f(z)dz$.
+		
+		Proof: Link $\Gamma=\gamma_1-\gamma_2$ to form a closed loop.
+		Then show that $f$ has an antiderivative $F$  for some region containing
+		all of $\Gamma$, and \[
+			\oint_{\Gamma}f(z)dz=\oint_{\Gamma}F'(z)dz=0.
+		\]
+	\item
+		Cauchy integral formula: for $f$ holomorphic over $\overline{D(a,r)}$,
+		then \[
+			f(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{w-z}dw
+		\] for all $z\in D(a,r)$.
+		
+		Proof: deform the curve $\abs{w-a}=r$ to $\abs{w-z}=\epsilon$, and
+		show that \[
+			\lim_{\epsilon\to 0}\frac{1}{2\pi i}\oint_{\abs{w-z}=\epsilon}\frac{f(w)}{w-z}dw
+			=f(z).
+		\]
+	\item
+		Corollary: for $f$ holomorphic over $U$, \[
+			f^{(n)}(z)=\frac{n!}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{(w-z)^n}dw,
+		\] which leads to the power series expansion: \[
+			f(z)=\sum_{n=0}^{\infty} a_n(z-a)^n
+		\] when $z\in D(a,r)$ and $\overline{D(a,r)}\subset U$.
+		
+		Proof: \[
+			\frac{1}{w-z}=\frac{1}{w-a}\frac{1}{1-\frac{z-a}{w-a}}
+		\] where \[
+			\abs{\frac{z-a}{w-a}}<1-0^+.
+		\]
+		
+		For functions $f$ holomorphic on $\overline{D(a,r)}$
+		and $z\in D(a,r)$, \[
+			\abs{f^{(n)}(z)}\leq \frac{n!r}{(r-\abs{z-a})^n}M
+		\] where $M=\sup_{\abs{z-a}=r}\abs{f(z)}$.
+		
+		Liouville Thm: No non-constant bounded entire function.
+		Remark: ``entire'' refers to a function $f:\complex\to\complex$ holomorphic.
+	\item
+		Corollary: Power series expansions are unique.
+		Restatement: if \[
+			f(z)=\sum_{n=0}^{\infty}a_n(z-\alpha)^n=\sum_{n=0}^{\infty}b_n(z-\alpha)^n
+		\] on some $D(\alpha,r)$ with $r>0$, then $a_n=b_n\forall n$.
+		
+		Proof: $f^{(n)}(\alpha)=n!a_n$ for all $n$.
+		
+		To show this, note that $f(z)=\sum_{n=0}^{\infty}a_n(z-\alpha)^n$.
+		Then, differentiating termwise (due to uniform convergence), \[
+			f^{(k)}(z)=\sum_{n=k}^{\infty}\frac{n!}{(n-k)!}a_n(z-\alpha)^{n-k}.
+		\] Thus substituting $z=\alpha$, \[
+			f^{(k)}(\alpha)=\frac{k!}{(k-k)!}a_k=k!a_k \iff
+			a_k=\frac{f^{(k)}(\alpha)}{k!}
+		\]
+\end{itemize}
+
+\section{Uniform limits of holomorphic functions}
+
+Note that in general, sequences of differentiable (i.e. $C^1$) functions
+can have uniform limits that are only continuous, not differentiable.
+
+\begin{thm}
+	Let $f_n:U\to \complex$ be a sequence of holomorphic functions.
+	Suppose that for any compact $E\subset U$, $f_n|_E$ converges uniformly
+	to a function on $E$.  Then there is a holomorphic function $f:U\to\complex$
+	such that $f_n\to f$ uniformly on every compact subset $E\subset U$.
+	Furthermore, the same convergence holds for $f_n^{(k)}\to f^{(k)}$
+	for any nonnegative integer $k$.
+\end{thm}
+\begin{proof}
+	By assumption, for any $z\in U$, we can view $\{z\}\subset U$ as a compact
+	set.  Then $f_n(z)$ converges.  Define $f(z)=\lim_{n\to\infty}f_n(z)$
+	(i.e. take $f$ to be the pointwise limit of the $f_n$).
+
+	Now choose some $r>0$ such that $\overline{D(a,r)}\subset U$
+	(because $U$ is open).  Then for each $n$, \[
+		f_n(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f_n(w)}{w-z}dw.
+	\] Note that the Cauchy integral determines not only the function
+	at its values on a circle, it also determines its derivatives.
+	
+	Note furthermore that $f_n(w)\to f(w)$ along the boundary $\del D(a,r)$.
+	Then \[
+		f(z)=\lim_{n\to\infty}f_n(z)=\lim_{n\to\infty}\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f_n(w)}{w-z}dw.
+	\] Because $f_n\to f$ uniformly on $\del D(a,r)$, \[
+		f(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{w-z}dw
+	\] (Note: be more rigorous about this in homework.)  Then because
+	any integral of this form is holomorphic, $f$ is holomorphic.
+\end{proof}
+
+\section{Zeros of a Holomorphic Function}
+Another thing we want to study is the local behavior of holomorphic
+functions.
+
+Take $f:U\to\complex$ holomorphic, $\alpha\in U$, and some $D(\alpha,r)\subset U$.
+Then \[
+	f(z)=\sum_{n=0}^\infty a_n(z-\alpha)^n.
+\] In particular, \[
+	f(z)-f(\alpha)=a_1(z-\alpha)+a_2(z-\alpha)^2+\cdots +a_n(z-\alpha)^n+\cdots.
+\]
+
+Case 1: $a_j=0\forall j=1,2,\ldots$.  Then $f(z)$ is a constant, and is equal
+to $f(\alpha)$.
+
+Case 2: At least one of the $a_j$ nonzero for some $j$; WLOG
+assume $a_1=\cdots=a_{n-1}=0$, $a_n\neq 0$ (where $n$ could be $1$).  Then \[
+	f(z)-f(\alpha)=a_n(z-\alpha)^n+a_{n+1}(z-\alpha)^{n+1}+\cdots
+	= (z-\alpha)^n(a_n+a_{n+1}(z-\alpha)+\cdots).
+\] The inside is now a power series, and it can
+be shown that this series converges on $D(\alpha,r)$.  Then, say \[
+	(z-\alpha)^n(a_n+a_{n+1}(z-\alpha)+\cdots)=(z-\alpha)^ng(z).
+\] I.e. define \[
+	g(z)=a_n+a_{n+1}(z-\alpha)+\cdots
+\] and $g(z)$ will be holomorphic on $D(\alpha,r)$, and $g(\alpha)=a_n\neq 0$.
+
+This is the (local) factorization property.  Either $f(z)=f(\alpha)$ near
+$z=\alpha$, or $f(z)-f(\alpha)=(z-\alpha)^n g(z)$, where $g(\alpha)\neq 0\iff f^{(n)}(\alpha)\neq 0$.
+
+\begin{thm}
+	Let $U\subset \complex$ be open, connected.  Take $z_n\to z_0\in U$, $z_n\neq z_0$.
+	Suppose $f:U\to\complex$ is holomorphic and $f(z_n)=0$ for all $n$.  Then $f(z)=0$
+	for $z\in U$.  (i.e. the zeros of a holomorphic function cannot accumulate
+	at a point.)
+\end{thm}
+\begin{proof}
+	First, we show that there is a $D(z_0,r)\subset U$ such that \[
+		f|_{D(z_0,r)}=0
+	\] Suppose for contradiction this is not true.
+	Note in particular that $f(z_0)=\lim_{n\to\infty}f(z_n)=0$,
+	since $f$ is continuous.  Then \[
+		f(z)-f(z_0)=(z-\alpha)^ng(z)
+	\] for some holomorphic function $g(z)$ on $D(z_0,r)$, where $g(z_0)\neq 0$
+	But then \[
+		f(z_i)=(z_i-z_0)^n g(z_i)=0
+	\] for each $i$.  But $z_i-z_0\neq 0$, so $g(z_i)=0$ for all $i$.
+	Then $g(z_0)=\lim_{i\to\infty}g(z_i)=0$, which is a contradiction.
+	
+	Thus $f^{(k)}(z_0)=0\forall k$.  Now we let \[
+		\Sigma=\{p\in U:f^{(k)}(p)=0\forall k\}.
+	\] If $\Sigma=U$ we are done.
+	
+	Claims:
+	\begin{itemize}
+		\item
+			$\Sigma$ is closed in $U$.
+		\item
+			$\Sigma$ is open in $U$.
+	\end{itemize}
+	Note that $\Sigma$ is closed, because it is the intersection
+	of sets $E_k=\{z\in U:f^{(k)}(z)=0\}$, each of which is closed.
+	
+	$\Sigma$ is open because of the previous property? (Not fully fleshed out,
+	will cover next class?)
+\end{proof}
+\label{lastpage}
+\end{document}

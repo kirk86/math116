@@ -1,0 +1,225 @@
+% Figures within a column...
+\makeatletter
+\newenvironment{tablehere}
+{\def\@captype{table}}
+{}
+\newenvironment{figurehere}
+{\def\@captype{figure}}
+{}
+\makeatother
+
+\documentclass{artikel3}
+\usepackage{amssymb,amsmath,amsthm,graphicx,enumerate,textcomp,color,datetime,mathtools}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{pgfplots}
+\yyyymmdddate
+\date{\formatdate{2012}{04}{25}}
+\pgfplotsset{compat=1.3}
+\setlength{\headheight}{15pt}
+\lhead{MATH 116: Lecture Notes 11, {\thepage} of \pageref{lastpage}}
+\chead{}
+\rhead{\today}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\newcommand{\pr}[1]{\left(#1\right)}
+\newcommand{\abs}[1]{\left|#1\right|}
+\renewcommand{\vec}[1]{\underline{#1}}
+\newcommand{\alt}[1]{\tilde{#1}}
+\newcommand{\dotp}[2]{#1\cdot #2}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\complex}{\mathbb{R}}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\eqlabel}[1]{\tag{\theequation}\label{#1}\refstepcounter{equation}}
+\newcommand{\mseq}[2]{#1_1,\ldots,#1_{#2}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\mvd}{\twoheadrightarrow}
+\newcommand{\unit}[1]{\;\rm{#1}}
+\newcommand{\del}{\partial}
+\newcommand{\indentblock}[1]{\addtolength{\leftskip}{5mm}
+#1
+}
+\newcommand{\interior}[1]{\breve{#1}}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{prop}{Proposition}
+\newcommand{\lemref}[1]{Lemma \ref{#1}}
+\newcommand{\TODO}[1]{}
+\DeclareMathOperator{\diam}{diam\;}
+\numberwithin{equation}{enumi}
+\newcommand{\eqcite}[1]{\text{[#1]}}
+\newcommand{\eqnref}[1]{Stmt. \ref{#1}}
+\newcommand{\expval}[1]{\left\langle #1\right\rangle}
+\newcommand{\closure}[1]{\overline{#1}}
+\begin{document}
+Proposed midterm time: 6th week Friday, or 7th week Monday,
+12:30-2pm.
+
+Review, Cauchy integral formula:
+\begin{thm}
+	If $f:D(a,r+\epsilon)\to \complex$ is holomorphic (for $\epsilon>0$),
+	then for any $z\in D(a,r)$, \[
+		f(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{w-z}dw.
+	\] Warning: this is NOT true if $f$ is not holomorphic.
+\end{thm}
+
+\begin{thm}
+	Riemann extension theorem:
+	Given $f:D(a,r+\epsilon)^*\to\complex$
+	holomorphic, $\lim_{z\to a}f(z)$ exists,
+	then $f$ extends to a holomorphic function of $D(a,r+\epsilon)$.
+\end{thm}
+\begin{proof}
+	Approach: define \[
+		\alt{f}(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{w-z}dw.
+	\] Since $f(w)$ is $C^0$ on $\abs{w-a}=r$, we already know
+	$\alt{f}$ is holomorphic on $D(a,r)$.  We need only show
+	that $\alt{f}=f$ on $D(a,r)^*$ (recall that $D(a,r)^*=D(a,r)\setminus\{a\}$
+	is the punctured disk).
+	
+	Pick $z\in D(a,r)^*$.  By invariance of integration, we can
+	shrink the loop $\abs{w-a}=r$ to two loops, one $\abs{w-a}=\delta$ for very
+	small $\delta$, and a second loop $\abs{w-z}=\delta$ (note
+	that the function $\frac{f(w)}{w-z}$ as a function of $w$
+	is holomorphic when $w\neq z,a$, i.e. over $D(a,r+\epsilon)\setminus\{a,z\}$).
+	
+	Thus, \[
+		\frac{1}{2\pi i}\oint_{\abs{w-z}=\delta}\frac{f(w)}{w-z}dw
+		= \frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{w-z}dw
+		- \frac{1}{2\pi i}\oint_{\abs{w-a}=\delta}\frac{f(w)}{w-z}dw,
+	\] so \[
+		f(z)=\alt{f}(z)-\frac{1}{2\pi i}\oint_{\abs{w-a}=\delta}\frac{f(w)}{w-z}dw.
+	\] By taking $\delta\to 0$, the second integral goes to zero (because $\abs{f(z)}$
+	is bounded in some neighborhood of $z=a$).  Thus $f(z)=\alt{f}(z)$.
+\end{proof}
+
+Future approach: though the Cauchy integral formula fails when there are
+singularities in the domain, we can instead integrate over the loop and subtract
+loop integrals around the singularities (i.e. add clockwise loop integrals
+around the singularities) to retrieve the value of $f(z)$.
+
+\section{Isolated singularities}
+Definition.  We say $a$ is an isolated singularity of $f$ if
+there is an $r>0$ such that $f$ is holomorphic on $D(a,r)^*$.
+
+Cases:
+\begin{enumerate}
+	\item
+		$\lim_{z\to a}f(z)=\alpha\in\complex$ exists.
+	\item
+		$\lim_{z\to a}\abs{f(z)}=\infty$ (written as
+		$\lim_{z\to a}f(z)=\infty$, i.e. unbounded).
+	\item
+		$\lim_{z\to a}f(z)$ does not exist at all (even
+		in $\complex\cup\{\infty\}$).
+\end{enumerate}
+
+Examples:
+\begin{enumerate}
+	\item
+		\[
+			\frac{\sin z}{z}=\frac{1}{z}\pr{z-\frac{z^3}{6}+\cdots}=1-\frac{z^2}{6}+\cdots
+		\] is holomorphic near zero, but by Riemann extension theorem this function
+		is holomorphic everywhere.
+	\item
+		\[
+			\frac{\sin z}{z^2}=\frac{1}{z}-\frac{z}{6}+\cdots
+		\] is holomorphic except at $z=0$, where it becomes unbounded (in all directions).
+	\item
+		For the function $e^{1/z}$, the limit as $z\to 0$ does not exist.
+\end{enumerate}
+
+\begin{prop}
+	Suppose $f$ has an isolated singularity at $z=a$, and $\lim_{z\to a}f(z)=\infty$.
+	Then \[
+		f(z)=\frac{g(z)}{(z-a)^k}
+	\] for some positive integer $k$, where $g(z)$ holomorphic near $z=a$,
+	and $g(a)\neq 0$.
+\end{prop}
+\begin{proof}
+	One possible strategy: look at $(z-a)^kf(z)$; but no bound on which $k$ we need.
+	Other strategy: look at $\frac{1}{f(z)}=\frac{(z-a)^k}{g(z)}$.  Note
+	that since $\lim_{z\to a}f(z)=\infty$, for sufficiently small neighborhood
+	$D(a,\epsilon)^*$ will have no zeros of $f$.  Then $h(z)=\frac{1}{f(z)}$
+	is holomorphic on $D(a,\epsilon)^*$.  Apply the Riemann extension theorem
+	to $h$, since $h(z)\to 0$ as $z\to a$.  Then $h(z)=(z-a)^k\alt{h}(z)$
+	where $\alt{h}$ holomorphic, $\alt{h}(a)\neq 0$, $k\geq 1$
+	(since $h(a)=0$).  Then set $g(z)=\frac{1}{\alt{h}(z)}$ to complete
+	the proof.
+\end{proof}
+
+Definition.  We call case 1 (i.e. where finite limit exists) a removable
+singularity.  We call case 2 (where the limit is infinity) a pole of
+order $k$ (of $f$).  In particular, $k$ is the positive integer
+such that $(z-a)^kf(z)$ has a nonzero removable singularity at $a$.
+We call case 3 an essential singularity (note: these are the singularities
+where the function becomes truly wild).
+
+\begin{thm}
+	Casorati-Weierstrass: Suppose $z=a$ is an essential singularity
+	of $f$.  Then for any (sufficiently small) $\epsilon>0$, $f(D(a,\epsilon)^*)$
+	dense in $\complex$.
+\end{thm}
+Remark: $e^{1/z}$ has an essential singularity at $z=0$, so for any $\alpha\in \complex\cup\{\infty\}$
+and any $\epsilon>0$,
+there is a sequence $p_n\in D(0,\epsilon)$ such that $e^{1/p_n}\to \alpha$.
+
+Second remark: there is a proof that the image
+of such a punctured disk covers the entire complex
+plane except possibly two points, but not three (not covered in class).
+
+\begin{proof}
+	Suppose $\alpha\notin \overline{f(D(a,\epsilon)^*)}$.  Then
+	there is some $\delta>0$ such that $D(\alpha,\delta)\cap f(D(a,\epsilon)^*)=\emptyset$.
+	
+	We introduce \[
+		g(z)=\frac{z-a}{f(z)-\alpha}.
+	\] $f$ has an isolated singularity at $a$, so $g$ is holomorphic
+	over $D(a,\epsilon)^*$ except where $f(z)=\alpha$, but by assumption
+	this does not occur (see above).  Thus $g$ has an isolated
+	singularity at $z=a$, but \[
+		\lim_{z\to a}g(z)=0,
+	\] because \[
+		\abs{\frac{1}{f(z)-\alpha}}\leq\frac{1}{\delta}
+	\] for $z\in D(a,\epsilon)^*$.  Thus $g$ is holomorphic near $a$, and \[
+		f(z)=\frac{z-a}{g(z)}+\alpha.
+	\] This function has at most a pole at $z=a$, since $g$ is holomorphic
+	near $a$ (i.e. use Riemann extension theorem and factoring zeros).
+\end{proof}
+
+Remark: this implies that if a holomorphic function with an isolated
+singularity is bounded near the point, it must have a limit
+near the point (i.e. it is neither a pole nor an essential singularity).
+
+Examples:
+\begin{enumerate}
+	\item
+		$\frac{1}{z(1-z)}$ has two poles at $0,1$ of order $1$.
+	\item
+		$\frac{1}{z}\sin z$ has a removable singularity.
+	\item
+		$\frac{1}{z}\cos z$ has a pole of order $1$.
+	\item
+		$\pr{z+\frac{1}{z}}^2$ has a pole of order $2$.
+	\item
+		$e^{1/z^2}$ has an essential singularity.  To prove,
+		take $\frac{1}{z_n^2}=2n\pi i$, then $e^{1/z_n^2}\to 1$
+		but $\frac{1}{w_n^2}=2n\pi i+1$ implies $e^{1/w_n^2}\to e$,
+		and $\lim_{z\to 0}e^{1/z^2}$ does not exist (in $\complex\cup\{\infty\}$).
+\end{enumerate}
+
+To prove $e^z+e^{1/z}$ is holomorphic on $\complex^*=\complex\setminus\{0\}$, then \[
+	e^z+e^{1/z}=\cdots+\frac{1}{n!}z^{-n}+\cdots+z^{-1}+2+z+\cdots+\frac{1}{n!}z^n+\cdots.
+\] This is called a Laurent series (which converges on an annulus; in this case,
+on the annulus $0<\abs{z}<\infty$), and next time: will prove that if there are an infinite
+number of negative powers in this series, then the singularity is essential; if there
+are only finitely many, the singularity is a pole.
+\label{lastpage}
+\end{document}

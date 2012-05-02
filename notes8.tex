@@ -1,0 +1,197 @@
+% Figures within a column...
+\makeatletter
+\newenvironment{tablehere}
+{\def\@captype{table}}
+{}
+\newenvironment{figurehere}
+{\def\@captype{figure}}
+{}
+\makeatother
+
+\documentclass{artikel3}
+\usepackage{amssymb,amsmath,amsthm,graphicx,enumerate,textcomp,color,datetime,mathtools}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{pgfplots}
+\yyyymmdddate
+\date{\formatdate{2012}{04}{18}}
+\pgfplotsset{compat=1.3}
+\setlength{\headheight}{15pt}
+\lhead{MATH 116: Lecture Notes 8, {\thepage} of \pageref{lastpage}}
+\chead{}
+\rhead{\today}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\newcommand{\pr}[1]{\left(#1\right)}
+\newcommand{\abs}[1]{\left|#1\right|}
+\renewcommand{\vec}[1]{\underline{#1}}
+\newcommand{\alt}[1]{\tilde{#1}}
+\newcommand{\dotp}[2]{#1\cdot #2}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\complex}{\mathbb{R}}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\eqlabel}[1]{\tag{\theequation}\label{#1}\refstepcounter{equation}}
+\newcommand{\mseq}[2]{#1_1,\ldots,#1_{#2}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\mvd}{\twoheadrightarrow}
+\newcommand{\unit}[1]{\;\rm{#1}}
+\newcommand{\del}{\partial}
+\newcommand{\indentblock}[1]{\addtolength{\leftskip}{5mm}
+#1
+}
+\newcommand{\interior}[1]{\breve{#1}}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+\newcommand{\lemref}[1]{Lemma \ref{#1}}
+\newcommand{\TODO}[1]{}
+\DeclareMathOperator{\diam}{diam\;}
+\numberwithin{equation}{enumi}
+\newcommand{\eqcite}[1]{\text{[#1]}}
+\newcommand{\eqnref}[1]{Stmt. \ref{#1}}
+\newcommand{\expval}[1]{\left\langle #1\right\rangle}
+\newcommand{\closure}[1]{\overline{#1}}
+\begin{document}
+\section{Power series expansion}
+Consider $f:U\to \complex$ holomorphic, and $D(a,r)\subset U$.
+
+\begin{thm}
+	$f(z)|_{D(a,r)}=f(a)+f'(a)(z-a)+\cdots +\frac{f^{(n)}(a)}{n!}(z-a)^n+\cdots$
+	where the power series converges over $D(a,r)$, and $=$ holds on $D(a,r)$ too.
+\end{thm}
+
+\begin{proof}
+	Take $z\in D(a,r)$, and take $r'$
+	such that $z\in D(a,r')\subset \overline{D(a,r')}\subset D(a,r)$.  Then \[
+		f(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r'}\frac{f(w)}{w-z}dw.
+	\] Note that \[
+		\frac{1}{w-z}=\frac{1}{(w-a)-(z-a)}=\frac{1}{w-a}\frac{1}{1-\frac{z-a}{w-a}}.
+	\] Observation: in the integral, $\abs{w-a}=r'$, $\abs{z-a}\leq r'-\epsilon$
+	for some $\epsilon>0$.  Then \[
+		\abs{\frac{z-a}{w-a}}\leq \frac{r'-\epsilon}{r'}=1-\frac{\epsilon}{r'}<1.
+	\] Thus \[
+		\frac{1}{1-\frac{z-a}{w-a}}=\sum_{n=0}^{\infty}\pr{\frac{z-a}{w-a}}^n.
+	\] Thus \[
+		\frac{1}{w-z}=\sum_{n=0}^{\infty}\frac{(z-a)^n}{(w-a)^{n+1}}
+	\] converges uniformly for $\abs{w-a}=r'$, $\abs{z-a}\leq 1-\frac{\epsilon}{r'}$.
+
+	By the Cauchy integral formula, \[
+		f(z)=\frac{1}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{w-z}dw
+		=\frac{1}{2\pi i}\oint_{\abs{w-a}=r'}\pr{f(w)\sum_{n=0}^{\infty}\frac{(z-a)^n}{(w-a)^{n+1}}}dw.
+	\] Due to the uniform convergence, we can extract the sum from the integral, so \[
+		f(z)=\frac{1}{2\pi i}\sum_{n=0}^{\infty}\oint_{\abs{w-a}=r'}\pr{f(w)\frac{(z-a)^n}{(w-a)^{n+1}}}dw
+		= \sum_{n=0}^{\infty}\pr{\frac{1}{2\pi i}\oint_{\abs{w-a}=r'}\frac{f(w)}{(w-a)^{n+1}}dw}(z-a)^n,
+	\] where the interior integral is equal to $\frac{f^{(n)}(a)}{n!}$.  Thus \[
+		f(z)=\sum_{n=0}^{\infty}\frac{f^{(n)}(a)}{n!}(z-a)^n.
+	\]
+\end{proof}
+
+The argument implies that this series converges and is equal to $f(z)$ for
+$\abs{z-a}\leq r'-\epsilon$, with $r'<r$ and $\epsilon>0$.  But for any $z\in D(a,r)$, we may choose
+$r'$ and $\epsilon$ satisfactory.  Thus the series converges over all of $D(a,r)$.
+General argument: pick a circle slightly smaller than $r$, use uniform
+convergence and the Cauchy integral over the circle to translate the sum
+outside the integral (also, take the Cauchy integral and expand it as a power
+series with ratio $\frac{z-a}{w-a}$).
+
+Note that the power series converges over all of $D(a,r)$, but converges uniformly
+over any slightly smaller disc $D(a,r')$, and particularly over its closure as well.
+
+Note also that uniform convergence allows for operations like differentiating under the sum?
+(not sure here, didn't hear that properly)
+
+Example: $e^z=e^x(\cos y+i\sin y)$.  $(e^z)'=e^z$, so $(e^z)^{(n)}|_{z=0}=1$.
+By the above, \[
+	e^z=1+z+\frac{z^2}{2}+\cdots+\frac{z^n}{n!}+\cdots.
+\] Remark: using the root test, \[
+	r=\frac{1}{\limsup_{\sqrt[n]{1/n!}}}=\infty,
+\] since $n!\approx \pr{\frac{n}{e}}^n\sqrt{2\pi n}$.
+Note that \[
+	\sin z=\frac{1}{2i}(e^{iz}-e^{-iz}), \cos z=\frac{1}{2}(e^{iz}+e^{-iz})
+\] are both holomorphic.  Additionally, \[
+	\sinh z=\frac{1}{2}(e^z-e^{-z}), \cosh z=\frac{1}{2}(e^z+e^{-z}).
+\] Note that almost all operations with the power series (sum, product, etc.)
+can be done with the power series, due to its strong convergence (i.e. geometric).
+
+\section{Cauchy Estimate}
+\begin{thm}
+	Take $f:U\to\complex$ holomorphic, and $\overline{D(a,r)}\subset U$, and \[
+		M=\sup_{w\in\del D(a,r)}\abs{f(w)}.
+	\] Then \[
+		\abs{f^{(n)}(a)}\leq\frac{n!}{r^n}M.
+	\]
+\end{thm}
+\begin{proof}
+	This follows from the Cauchy integral.  The formula yields \[
+		f^{(n)}(a)=\frac{n!}{2\pi i}\oint_{\abs{w-a}=r}\frac{f(w)}{(w-a)^{n+1}}dw.
+	\] Thus \[
+		\abs{f^{(n)}(a)}\frac{n!}{2\pi}\abs{\oint_{\abs{w-a}=r}\frac{f(w)}{(w-a)^{n+1}}dw}
+		\leq \frac{n!}{2\pi}\oint_{\abs{w-a}=r}\abs{\frac{f(w)}{(w-a)^{n+1}}}\abs{dw}.
+	\] Recall that $dw$ is complex, so it also requires an absolute value.  Thus \[
+		\frac{n!}{2\pi}\oint_{\abs{w-a}=r}\abs{\frac{f(w)}{(w-a)^{n+1}}}\abs{dw}
+		= \frac{n!}{2\pi}\int_{0}^{2\pi}\abs{\frac{f(a+re^{i\theta})}{(re^{i\theta})^{n+1}}}\abs{ire^{i\theta}}d\theta.
+	\] Then, $\abs{f(a+re^{i\theta})}\leq M$, so \[
+		\frac{n!}{2\pi}\int_{0}^{2\pi}\abs{\frac{f(a+re^{i\theta})}{(re^{i\theta})^{n+1}}}\abs{ire^{i\theta}}d\theta
+		\leq \frac{n!}{2\pi}\int_{0}^{2\pi}\frac{M}{r^{n+1}}rd\theta=\frac{n!}{r^n}M.
+	\]
+\end{proof}
+
+\begin{thm}
+	Under same conditions, take $z\in D(a,r)$.  Then \[
+		f^{(n)}(z)\leq \frac{rn!}{(r-\abs{z-a})^n}M.
+	\]
+\end{thm}
+\begin{proof}
+	Then the proof follows the same structure as the previous,
+	except that the denominator becomes $\abs{re^{i\theta}-(z-a)}\geq r-\abs{z-a}$ instead
+	of $\abs{re^{i\theta}}=r$.
+	Thus \[
+		\abs{f^{(n)}(z)}\leq \frac{rn!}{(r-\abs{z-a})^{n+1}}M.
+	\]
+\end{proof}
+
+\section{Liouville Theorem}
+\begin{thm}
+	A bounded holomorphic function $f:\complex\to\complex$ is a constant
+	function.
+\end{thm}
+\begin{proof}
+	$f$ bounded iff $\abs{f(z)}\leq M$ for some $M$.  Then, take any large disc
+	of radius $R$ centered at some point $a\in\complex$.  Applying the previous estimate, \[
+		\abs{f'(a)}\leq \frac{M}{R}.
+	\] As $R$ can be arbitrarily large, $\abs{f'(a)}=0$.  Thus, $f'=0$ identically
+	for all $a\in\complex$, and $f$ is constant.
+\end{proof}
+
+\section{Gauss' Fundamental Theorem of Algebra}
+\begin{thm}
+	Any positive degree polynomial
+	with complex coefficients (defined on $\complex$) has at least one root in $\complex$.
+\end{thm}
+
+\begin{proof}[Proof (one of many)]
+	Suppose $p(z)=z^n+a_{n-1}z^{n-1}+\cdots +a_0$
+	(WLOG assume leading coeff. $1$), with $n\geq 1$, and $p$ has no roots in $\complex$.
+	Take \[
+		f(z)=\frac{1}{p(z)}.
+	\] Then, show that $f:\complex\to\complex$ is holomorphic.  Following that,
+	show that $f(z)$ is bounded on $\complex$ (i.e. when $z$ is of very large
+	magnitude, $z^n$ term dominates, so $p(z)$ also very large (and for smaller $z$,
+	bound by compactness argument over sufficiently large closed ball).
+
+	In particular, \[
+		\frac{1}{p(z)}=\frac{1}{z^n}\frac{1}{1+a_{n-1}z^{-1}+\cdots+a_0z^{-n}}.
+	\] Pick $R$ such that for $\abs{z}\geq R$, \[
+		\abs{a_{n-k}z^{-k}}\leq \frac{1}{n+2}.
+	\] Then $\abs{z}\geq R\geq 10(n+1)^2$, \[
+		\abs{\frac{1}{p(z)}}\leq \abs{\frac{1}{z^n}}\frac{1}{1-\frac{n}{n+2}}\leq 1.
+	\] Liouville Thm. implies $p$ constant, but this contradicts
+	the positive degree of $p$.
+\end{proof}
+\label{lastpage}
+\end{document}

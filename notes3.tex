@@ -1,0 +1,156 @@
+% Figures within a column...
+\makeatletter
+\newenvironment{tablehere}
+{\def\@captype{table}}
+{}
+\newenvironment{figurehere}
+{\def\@captype{figure}}
+{}
+\makeatother
+
+\documentclass{artikel3}
+\usepackage{amssymb,amsmath,amsthm,graphicx,enumerate,textcomp,color,datetime}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{pgfplots}
+\yyyymmdddate
+\date{\formatdate{2012}{04}{06}}
+\pgfplotsset{compat=1.3}
+\setlength{\headheight}{15pt}
+\lhead{MATH 116: Lecture Notes 3, {\thepage} of \pageref{lastpage}}
+\chead{}
+\rhead{\today}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\newcommand{\pr}[1]{\left(#1\right)}
+\newcommand{\abs}[1]{\left|#1\right|}
+\renewcommand{\vec}[1]{\underline{#1}}
+\newcommand{\alt}[1]{\tilde{#1}}
+\newcommand{\dotp}[2]{#1\cdot #2}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\complex}{\mathbb{R}}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\eqlabel}[1]{\tag{\theequation}\label{#1}\refstepcounter{equation}}
+\newcommand{\mseq}[2]{#1_1,\ldots,#1_{#2}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\mvd}{\twoheadrightarrow}
+\newcommand{\unit}[1]{\;\rm{#1}}
+\newcommand{\del}{\partial}
+\newcommand{\indentblock}[1]{\addtolength{\leftskip}{5mm}
+#1
+}
+\newcommand{\interior}[1]{\breve{#1}}
+\newtheorem{lem}{Lemma}
+\newcommand{\lemref}[1]{Lemma \ref{#1}}
+\newcommand{\TODO}[1]{}
+\DeclareMathOperator{\diam}{diam\;}
+\begin{document}
+\numberwithin{equation}{enumi}
+\newcommand{\eqcite}[1]{\text{[#1]}}
+\newcommand{\eqnref}[1]{Stmt. \ref{#1}}
+\newcommand{\expval}[1]{\left\langle #1\right\rangle}
+\newcommand{\closure}[1]{\overline{#1}}
+\section{Harmonic Functions}
+Holomorphic Cauchy-Riemann equations:
+\begin{gather*}
+	u_x=v_y\text{ and }u_y=-v_x\\
+	f_x+if_y=0(=2\frac{\del}{\del \bar{z}}f)\\
+	f_y=if_x
+\end{gather*}
+
+Definition: $u:\Omega\to \reals$, $C^2$ function is harmonic iff \[
+	\frac{\del^2}{\del x^2}u(x,y)+\frac{\del^2}{\del y^2}u(x,y)=0.
+\] Proposition: Let $f(z):\Omega\to \complex$ be a $C^2$ holomorphic function.  Then
+$\Re{f}$ and $\Im{f}$ are harmonic.
+
+\begin{proof}
+	Write $f=u+iv$.  Then \[
+		u_{xx}+u_{yy}=(u_x)_x+(u_y)_y
+		=(v_y)_x+(-v_x)_y=v_{yx}-v_{xy}=0
+	\] so $u$ is harmonic.  Similarly, $v$ is harmonic.
+\end{proof}
+
+\section{Antiderivative}
+Proposition: Let $D$ be a disk and $F$ be a holomorphic function on $D$.  Then there is
+a holomorphic function $G(z)$ on $D$ such that \[
+	\frac{\del}{\del z}G(z)=F(z).
+\] Compare: $h(t)\in C^0$ means that if we take $g(t)=\int_0^t h(u)du$, then $g'(t)=h(t)$.
+
+\begin{proof}
+	Suppose $G(z)$ exists.  Then, consider $a+ib$ fixed, and some
+	other complex variable $x+iy$.  Then define $h$ by \[
+		h(t)=G(a+t(x-a),b+t(y-b)).
+	\] Then \[
+		G(x,y)=h(1)=G(a,b)+\int_0^1 h'(t)dt.
+	\] where $h(0)=G(a,b)$.  But \[
+		h'(t) = G_x(a+t(x-a),b+t(y-b))\frac{d}{dt}(a+t(x-a))
+			+ G_y(a+t(x-a),b+t(y-b))\frac{d}{dt}(b+t(y-b))
+	\] so \[
+		h'(t)=(x-a)G_x(a+t(x-a),b+t(y-b))+(y-b)G_y(a+t(x-a),b+t(y-b)).
+	\] But we defined \[
+		\frac{\del}{\del z}G = \frac{1}{2}(G_x-iG_y) = F.
+	\] In conjunction with $G_x+iG_y=0$, \[
+		G_x=F, G_y=iF.
+	\] Then \[
+		h'(t)=(x-a)F(a+t(x-a),b+t(y-b))+(y-b)iF(a+t(x-a),b+t(y-b))
+			= [(x-a)+i(y-b)]F(a+t(x-a),b+t(y-b)).
+	\] Since $F$ is holomorphic, it is certainly differentiable, so it is integrable, and thus \[
+		G(x,y)=G(a,b)+\int_{0}^1[(x-a)+i(y-b)]F(a+t(x-a),b+t(y-b))dt.
+	\] Now, to prove this function is satisfactory, take this as the definition
+	of $G$ (and, WLOG, assume $G(a,b)=0$ and $a=b=0$ by translation
+	substitution).  We need to check the equations \[
+		\frac{\del}{\del \bar{z}}G(z)=0,\frac{\del}{\del z}G(z)=F(z).
+	\] For the former, note that now \[
+		G(x,y)=\int_{0}^1(x+iy)F(tx,ty)dt.
+	\] Differentiating, \[
+		G_x(x,y)=\int_{0}^1[F(tx,ty)+(x+iy)tF_x(tx,ty)]dt
+	\] and similarly \[
+		G_y(x,y)=\int_{0}^1[iF(tx,ty)+(x+iy)tF_y(tx,ty)]dt.
+	\] Then note that \[
+		iG_y(x,y)\int_{0}^1[-F(tx,ty)+(x+iy)tiF_y(tx,ty)]dt.
+	\] But since $F$ is holomorphic, $iF_y=-F_x$.  Thus $iG_y=G_x$, which
+	by the Cauchy-Riemann eq. forms above, implies that $\frac{\del}{\del z}G=0$.
+	
+	Latter left as exercise.
+\end{proof}
+Alternately, we can consider \[
+	G(x,y)=\int_0^1 [xF(tx,ty)+iyF(tx,ty)]dt,
+\] note that this is the path integral from $(0,0)$ to $(x,y)$ so this
+can be rewritten as \[
+	G(x,y)=\int_0^1 F(tx,ty)d[(x+iy)t]
+		= \int_0^1 F(tx,ty)(d(tx)+id(ty))
+		= \int_\gamma F(x,y)(dx+idy)
+\] where $\gamma:[0,1]\to D$ is given by $\gamma(t)=(tx,ty)$.
+Thus this is a line integral over $\gamma$, which can be written as \[
+	G(z)=\int_\gamma F(w)dw = \int_0^z F(w)dw,
+\] where $w$ ranges from $0$ to $z$ on a straight line.
+
+\section{Line Integral}
+Considering $f(z)=u(x,y)+iv(x,y)$, define \[
+	\gamma:t\mapsto a(t)+ib(t), t\in [0,1].
+\] Define \[
+	\int_\gamma f(z)dz=\int_{\gamma}(u(x,y)dx - v(x,y)dy)
+		+ i\int_{\gamma}(v(x,y)dx + u(x,y)dy)
+			(= \int_\gamma (u(x,y)+iv(x,y))(dx+idy)).
+\] Substitution yields \[
+	\int_\gamma f(z)dz=\int_{0}^1[u(a(t),b(t))a'(t)-v(a(t),b(t))b'(t)]dt
+		+ i\int_{0}^1[v(a(t),b(t))a'(t)+u(a(t),b(t))b'(t)]dt.
+\] Note that by Stokes' theorem, path integrals $\int_\gamma a(x,y)dx+b(x,y)dy$
+are path-independent iff $a_y=b_x$.  Thus, the above integral
+is path-independent iff $u_y=v_x$ and $u_x=-v_y$, i.e. iff $f$ is holomorphic.
+
+Writing out explicitly, \[
+	\int_\gamma f(z)dx+if(z)dy
+\] is path-independent iff \[
+	\frac{\del}{\del y}f(z)=\frac{\del}{\del x}if(z)
+\] i.e. $f_y=if_x$, or $f$ is holomorphic.
+
+Note: path-independence is important, remember this.
+\label{lastpage}
+\end{document}
